@@ -19,9 +19,12 @@ class User{
         $query->where(['id'=>$id,'status'=>0]);
         if ($fields) {
             $query->select($fields);
-        } else {
-            $query->select('id','name','account','ID_card','phone','avatar','create_time','update_time','is_manager','school_id');
         }
         return $query->first();
+    }
+
+    // 判断用户是否登陆成功
+    public static function alread_login(){
+        
     }
 }

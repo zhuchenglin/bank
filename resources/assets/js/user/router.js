@@ -10,5 +10,10 @@ export default new VueRouter({
             path: '/',
             component: resolve =>void(require(['./User.vue'], resolve))
         },
+        {
+            name:'user/index',
+            path: '/user/index',
+            component: resolve =>void(require(['./components/Index.vue'], resolve))
+        },
     ]
 })

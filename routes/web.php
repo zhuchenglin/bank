@@ -12,12 +12,13 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('login');
+    // echo '123';
 });
 
+Route::get('/login', 'LoginController@index');
+
 Route::group(['middleware'=>['login.check']],function (){
-
-
-    include('admin.php');
     include('users.php');
+   
 });

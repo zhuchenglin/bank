@@ -8,7 +8,7 @@
     <link href="element-theme/index.css" rel="stylesheet">
     <!-- <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet"> -->
     <link href="https://cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
-    <link href="{{mix('css/teacher.css')}}" rel="stylesheet">
+    <link href="{{mix('css/app.css')}}" rel="stylesheet">
     <title>{{config("app.name")}}</title>
 </head>
 <body>
