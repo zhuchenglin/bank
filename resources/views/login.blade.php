@@ -88,7 +88,7 @@ a{color:#0078ff;}
 </head>
 <body>
 <div id="login">
-	<form action="" class="login-form">
+	<form class="login-form">
 		<h3 class="login-form-title">银行登陆系统</h3>
 		<div>
 			<input class="login-form-input login-userId"
@@ -113,7 +113,7 @@ a{color:#0078ff;}
 		</div>
 		<span class="prompt-verification login-prompt">请输入验证码</span>
 		<div>
-			<input class="login-form-submit" type="submit" value="提&nbsp;&nbsp;&nbsp;交">
+			<input id="login_btn" onclick="submit_form()" type="button" class="login-form-submit" value="提&nbsp;&nbsp;&nbsp;交">
 		</div>
 	</form>
 </div>
@@ -129,7 +129,10 @@ function watchInput(ErrorInput,ErrorInputName,ErrorSpan,ErrorSpanName) {
 	}
 }
 
-// ajax  
+	function submit_form() {
+
+    }
+
 </script>
 
 
@@ -153,7 +156,7 @@ function watchInput(ErrorInput,ErrorInputName,ErrorSpan,ErrorSpanName) {
 	function init() {
 
 		container = document.createElement( 'div' );
-		container.style.cssText = "position: absolute;top: 0;z-index: -1;";
+		container.style.cssText = "position: absolute;top: 0;z-index: -1;background-color:#000";
 		document.body.appendChild( container );
 
 		camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -165,7 +168,6 @@ function watchInput(ErrorInput,ErrorInputName,ErrorSpan,ErrorSpanName) {
 
 		var PI2 = Math.PI * 2;
 		var material = new THREE.ParticleCanvasMaterial( {
-
 			color: 0xffffff,
 			program: function ( context ) {
 
