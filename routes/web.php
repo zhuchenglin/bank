@@ -16,7 +16,13 @@ Route::get('/', function () {
     // echo '123';
 });
 
-Route::get('/login', 'LoginController@index');
+Route::post('/login', 'LoginController@check_login');
+
+// 测试
+Route::get('/test', function(){
+    echo 'this is test';
+    // return view('login');
+});
 
 Route::group(['middleware'=>['login.check']],function (){
     include('users.php');
