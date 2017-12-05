@@ -20,5 +20,5 @@ Route::get('/login', 'LoginController@index');
 
 Route::group(['middleware'=>['login.check']],function (){
     include('users.php');
-   
+    include('admin.php');
 });
