@@ -117,7 +117,8 @@ a{color:#0078ff;}
 		</div>
 		<span class="prompt-verification login-prompt">请输入验证码</span>
 		<div>
-			<input class="login-form-submit" type="button" value="提&nbsp;&nbsp;&nbsp;交">
+			<input id="login_btn" onclick="submit_form()"
+			 class="login-form-submit" type="button" value="提&nbsp;&nbsp;&nbsp;交">
 		</div>
 	</form>
 </div>
@@ -146,7 +147,8 @@ function removeErrorClass(ErrorInput,ErrorInputName,ErrorSpan,ErrorSpanName,Erro
 $.ajaxSetup({
     headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}
 });
-$(".login-form-submit").click(function(){
+
+function submit_form() {
 	var userId = document.getElementsByClassName("login-userId")[0].value;
 	var pwd = document.getElementsByClassName("login-pwd")[0].value;
 	var verification = document.getElementsByClassName("login-verification")[0].value;
@@ -173,10 +175,7 @@ $(".login-form-submit").click(function(){
 			console.log(res)
     });
 
-});
-
-
-
+}
 
 </script>
 
@@ -201,7 +200,7 @@ $(".login-form-submit").click(function(){
 	function init() {
 
 		container = document.createElement( 'div' );
-		container.style.cssText = "position: absolute;top: 0;z-index: -1;";
+		container.style.cssText = "position: absolute;top: 0;z-index: -1;background-color:#000";
 		document.body.appendChild( container );
 
 		camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -213,7 +212,6 @@ $(".login-form-submit").click(function(){
 
 		var PI2 = Math.PI * 2;
 		var material = new THREE.ParticleCanvasMaterial( {
-
 			color: 0xffffff,
 			program: function ( context ) {
 
