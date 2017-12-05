@@ -4,10 +4,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>银行管理系统</title>
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="token" content="{{csrf_token()}}">
+<!-- <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> -->
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
 <style>
 
-body{display: block;background-color: #000000;margin: 0px;overflow: hidden;}
+body{display: block;background-color: #000000;margin: 0px;overflow: scroll;}
 a{color:#0078ff;}
 /* 登陆界面 */
 .login-form{
@@ -88,48 +92,92 @@ a{color:#0078ff;}
 </head>
 <body>
 <div id="login">
-	<form action="" class="login-form">
+	<form class="login-form">
 		<h3 class="login-form-title">银行登陆系统</h3>
 		<div>
 			<input class="login-form-input login-userId"
-			 onBlur="watchInput('login-userId','login-userId-error','prompt-userId','prompt-userId-error')"
+			 onBlur="watchInput('login-userId','login-userId-error','prompt-userId','prompt-userId-error','请输入账号')"
 			 onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')"
 			 type="text" value="" placeholder="账号">
 		</div>
 		<span class="login-prompt prompt-userId">请输入账号</span>
 		<div>
 			<input class="login-form-input login-pwd" 
-			 onBlur="watchInput('login-pwd','login-pwd-error','prompt-pwd','prompt-pwd-error')"
+			 onBlur="watchInput('login-pwd','login-pwd-error','prompt-pwd','prompt-pwd-error','请输入密码')"
 			 onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')"
-			type="text" value="" placeholder="密码">
+			type="password" value="" placeholder="密码">
 		</div>
 		<span class="prompt-pwd login-prompt">请输入密码</span>
 		<div class="login-form-codediv">
 			<input class="login-form-input login-verification"
-			 onBlur="watchInput('login-verification','login-verification-error','prompt-verification','prompt-verification-error')"
+			 onBlur="watchInput('login-verification','login-verification-error','prompt-verification','prompt-verification-error','请输入验证码')"
 			 onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')"
 			 type="text" value="" placeholder="验证码">
 			<img class="login-verification-img" src="/img/Verification.png" alt="登陆验证码">
 		</div>
 		<span class="prompt-verification login-prompt">请输入验证码</span>
 		<div>
-			<input class="login-form-submit" type="submit" value="提&nbsp;&nbsp;&nbsp;交">
+			<input class="login-form-submit" type="button" value="提&nbsp;&nbsp;&nbsp;交">
 		</div>
 	</form>
 </div>
 <script>
 // 监听input文本框值的变化
-function watchInput(ErrorInput,ErrorInputName,ErrorSpan,ErrorSpanName) {
+function watchInput(ErrorInput,ErrorInputName,ErrorSpan,ErrorSpanName,ErrorInfo) {
 	if($("."+ErrorInput)[0].value == ""){
-		$("."+ErrorInput).addClass(ErrorInputName);
-		$("."+ErrorSpan).addClass(ErrorSpanName);
+		addErrorClass("."+ErrorInput,ErrorInputName,"."+ErrorSpan,ErrorSpanName,ErrorInfo);
 	}else{
-		$("."+ErrorInput).removeClass(ErrorInputName);
-		$("."+ErrorSpan).removeClass(ErrorSpanName);
+		removeErrorClass("."+ErrorInput,ErrorInputName,"."+ErrorSpan,ErrorSpanName,"check.");
 	}
 }
+function addErrorClass(ErrorInput,ErrorInputName,ErrorSpan,ErrorSpanName,ErrorInfo){
+	$(ErrorInput).addClass(ErrorInputName);
+	$(ErrorSpan).addClass(ErrorSpanName);
+	$(ErrorSpan)[0].innerText = ErrorInfo;
+	setTimeout(function(){
+		removeErrorClass(ErrorInput,ErrorInputName,ErrorSpan,ErrorSpanName,"check.");
+	},2000);
+}
+function removeErrorClass(ErrorInput,ErrorInputName,ErrorSpan,ErrorSpanName,ErrorInfo){
+	$(ErrorInput).removeClass(ErrorInputName);
+	$(ErrorSpan).removeClass(ErrorSpanName);
+	$(ErrorSpan)[0].innerText = ErrorInfo;
+}
+$.ajaxSetup({
+    headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}
+});
+$(".login-form-submit").click(function(){
+	var userId = document.getElementsByClassName("login-userId")[0].value;
+	var pwd = document.getElementsByClassName("login-pwd")[0].value;
+	var verification = document.getElementsByClassName("login-verification")[0].value;
+	
+	if(userId == ""){
+		addErrorClass(".login-userId","login-userId-error",".prompt-userId","prompt-userId-error","账号不能为空");
+	}
+	if(pwd == ""){	
+		addErrorClass(".login-pwd","login-pwd-error",".prompt-pwd","prompt-pwd-error","密码不能为空");
+	}
+	if(verification == ""){
+		addErrorClass(".login-verification","login-verification-error",".prompt-verification","prompt-verification-error","验证码不能为空");
+	}
 
-// ajax  
+	// console.log("1-"+userId+" 2-"+pwd+" 3-"+verification);
+	// ajax  
+	$.post("/login",
+    {
+        user_name: userId,
+		user_pwd: pwd,
+		verification: verification
+    },
+    function(res){
+			console.log(res)
+    });
+
+});
+
+
+
+
 </script>
 
 
