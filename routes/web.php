@@ -11,12 +11,13 @@
 |
 */
 
-Route::get('/', function () {
+
+
+Route::get('/login',function (){
     return view('login');
-    // echo '123';
 });
 
-Route::post('/login', 'LoginController@check_login');
+Route::post('/check/login','LoginController@check_login');
 
 // 测试
 Route::get('/test', function(){
@@ -25,6 +26,9 @@ Route::get('/test', function(){
 });
 
 Route::group(['middleware'=>['login.check']],function (){
+    Route::get('/','IndexController@index');
+
+
     include('users.php');
     include('admin.php');
 });
