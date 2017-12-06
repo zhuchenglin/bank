@@ -165,7 +165,7 @@ function submit_form() {
 
 	// console.log("1-"+userId+" 2-"+pwd+" 3-"+verification);
 	// ajax  
-	$.post("/login",
+	$.post("/check/login",
     {
         user_name: userId,
 		user_pwd: pwd,
