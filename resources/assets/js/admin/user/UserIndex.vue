@@ -81,11 +81,11 @@
                 this.send_request('post','/admin/user/list',function (response,self) {
                     if(response.data.code==0){
                         self.users = response.data.result;
-                        if(self.users.length<0){
-
-                        }
                     }else{
-
+                        self.$message({
+                            message:response.data.msg,
+                            type: 'error'
+                        });
                     }
                 })
             }
