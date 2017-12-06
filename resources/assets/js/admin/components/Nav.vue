@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="menu_nav_left">
-            <el-menu default-active="1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
+            <el-menu default-active="1" class="el-menu-vertical-demo"
                      @select="click_menu" :collapse="isCollapse">
                 <el-menu-item index="0">
                     <i class="el-icon-menu menu_icon"></i>
@@ -55,7 +55,7 @@
                         <span slot="title">我的</span>
                     </template>
                     <el-menu-item-group>
-                        <el-menu-item index="4-1">我的资料</el-menu-item>
+                        <el-menu-item index="4-1">个人中心</el-menu-item>
                         <el-menu-item index="4-2">注销登录</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
@@ -75,6 +75,9 @@
         font-size: 20px;
         margin-right: 10px;
     }
+    .menu_nav_left{
+        float: left;
+    }
 </style>
 
 <script scoped>
@@ -89,14 +92,13 @@
         computed: {},
         methods: {
             handleOpen(key, keyPath) {
-//                console.log(key, keyPath);
+                console.log(key)
+                $('.el-table').css('width','80% !important');
             },
             handleClose(key, keyPath) {
-//                console.log(key, keyPath);
+                $('.el-table').css('width','90% !important');
             },
             click_menu(index) {
-                console.log(index);
-
                 if (index == 0) {
                     this.isCollapse = !this.isCollapse;
                 }

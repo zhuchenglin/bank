@@ -22,7 +22,6 @@ Vue.component('remote-script', {
             }
         });
     },
-
     props: {
         src: {
             type: String,
@@ -30,3 +29,15 @@ Vue.component('remote-script', {
         }
     }
 });
+
+
+Vue.prototype.send_request = function (meth,url,callback,data=null) {
+    var self = this;
+    axios({
+        'method':meth,
+        'url':url,
+        'data':data
+    }).then(function (response) {
+        callback(response,self);
+    })
+};

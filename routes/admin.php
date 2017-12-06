@@ -1,10 +1,6 @@
 <?php
 Route::group(['prefix' => 'admin'], function () {
-    Route::get('/',function(){
-        return view('admin.index');
-    });
-
-
+    Route::post('/user/list','Admin\IndexController@get_user_list');
 
 
 });
