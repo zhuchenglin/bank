@@ -130,3 +130,22 @@ function sensitive_word_filter($org_str,$flag='***'){
     return $str;
 }
 
+/**
+ * 检查用户身份是否正确
+ * @param $user_id
+ * @param $type type=0 普通用户  type=1 管理员
+ * @return bool
+ */
+function check_identity($user_id,$type){
+    $user = DB::table('user')->where(['status'=>0,'id'=>$user_id]);
+    if($type==0){
+        $user = $user->where('is_manager',0);
+    }else if($type==1){
+        $user = $user->where('is_manager',1);
+    }
+    $user = $user->first();
+    if($user){
+        return true;
+    }
+    return false;
+}

@@ -41,3 +41,11 @@ Vue.prototype.send_request = function (meth,url,callback,data=null) {
         callback(response,self);
     })
 };
+
+Vue.prototype.show_message = function (msg,type,showClose=true){
+    this.$message({
+        showClose: showClose,
+        message: msg,
+        type: type
+    });
+}

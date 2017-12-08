@@ -1,6 +1,11 @@
 <?php
 Route::group(['prefix' => 'admin'], function () {
-    Route::post('/user/list','Admin\IndexController@get_user_list');
+    Route::group(['prefix' => 'user'], function () {
+        Route::post('/list','Admin\IndexController@get_user_list');
+        Route::post('/en_disable','Admin\IndexController@en_disable');
+        Route::post('/delete','Admin\IndexController@delete');
+        Route::post('/create','Admin\IndexController@user_create');
+    });
 
 
 });

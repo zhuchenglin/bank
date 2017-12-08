@@ -1,6 +1,10 @@
 <template>
     <div>
-        <el-table :style=" $parent.isCollapse ? 'width:90%;margin: 0 auto' : 'width:80%;margin: 0 auto'"
+        <el-table    v-loading="load_user_list"
+                     element-loading-text="拼命加载中"
+                     element-loading-spinner="el-icon-loading"
+                :style=" $parent.isCollapse ? 'width:90%;' : 'width:80%;'"
+                  style="margin:auto;display: inline-block"
                 :data="users">
             <el-table-column
                     label="姓名"
@@ -48,11 +52,14 @@
                 <template slot-scope="scope">
                     <el-button
                             size="mini"
-                            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                            @click="">账户详情</el-button>
+                    <el-button
+                            size="mini"
+                            @click="en_disable(scope.row.id,scope.row.status)">{{scope.row.status==0 ? '禁用' : '启用'}}</el-button>
                     <el-button
                             size="mini"
                             type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            @click="handleDelete(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -69,7 +76,10 @@
         data(){
             return {
                 users:[],
-                no_data:false
+                no_data:false,
+                user_id:0,
+                can_operate:true,
+                load_user_list:false,
             }
         },
         components: {
@@ -78,7 +88,9 @@
         computed: {},
         methods: {
             get_users(){
+                this.load_user_list = true;
                 this.send_request('post','/admin/user/list',function (response,self) {
+                    self.load_user_list = false;
                     if(response.data.code==0){
                         self.users = response.data.result;
                     }else{
@@ -88,7 +100,66 @@
                         });
                     }
                 })
+            },
+            handleEdit(id,name,phone,ID_card){
+
+            },
+            en_disable(id,status){
+                if(this.can_operate){
+                    this.can_operate=false;
+                    let stat;
+                    if(status==0){
+                        stat = 2;
+                    }else{
+                        stat = 0;
+                    }
+                    let data = {
+                        user_id:id,
+                        status:stat
+                    }
+                    this.send_request('post','/admin/user/en_disable',function (response,self) {
+                        if(response.data.code==0){
+                            self.show_message(response.data.msg,'success');
+                            setTimeout(()=>{
+                                    history.go(0);
+                                },1000)
+                        }else{
+                            self.show_message(response.data.msg,'warning');
+                            self.can_operate = true;
+                        }
+                    },data)
+                }
+            },
+            handleDelete(id){
+                let self = this;
+                this.$confirm('确定要删除该用户吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    if(self.can_operate){
+                        self.can_operate = false;
+                        let data = {
+                            user_id:id,
+                            status:1
+                        }
+                        self.send_request('post','/admin/user/delete',function (response,self) {
+                            if(response.data.code==0){
+                                self.show_message(response.data.msg,'success');
+                                setTimeout(()=>{
+                                    history.go(0);
+                                },1000)
+                            }else{
+                                self.show_message(response.data.msg,'warning');
+                                self.can_operate = true;
+                            }
+                        },data)
+                    }
+                }).catch(() => {
+
+                });
             }
+
         },
         mounted() {
             this.get_users();

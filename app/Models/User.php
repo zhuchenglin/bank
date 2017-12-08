@@ -36,12 +36,57 @@ class User
 
     }
 
+    //后台页面显示的用户列表
     public static function user_list(){
-        $user_list = DB::table('user')->where(['is_manager'=>0,'status'=>0])->select('id','name','account','ID_card','avatar','phone','create_time','is_manager','update_time')->get();
+        $user_list = DB::table('user')->where(['is_manager'=>0])->where(function ($q){
+            $q->where('status',0)->orWhere('status',2);
+        })->select('id','name','account','ID_card','avatar','phone','create_time','is_manager','update_time','status')->get();
         if($user_list){
             return $user_list;
         }
         return 0;
+    }
+
+    //后台禁用启用用户的操作
+    public static function en_disable_del($user_id,$status){
+        $result = DB::table('user')->where(['id'=>$user_id])->where(function ($q){
+            $q->where('status',0)->orWhere('status',2);
+        })->update(['status'=>$status]);
+        if($result){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * 后台添加普通用户的方法
+     */
+    public static function create_user($name,$account,$ID_card,$phone,$password='123456'){
+        $result = DB::table('user')->insert([
+            'name'=>$name,
+            'account'=>$account,
+            'ID_card'=>$ID_card,
+            'phone'=>$phone,
+            'password'=>md5($password)
+        ]);
+        if($result){
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 后台判断用户account是否已存在
+     * 存在的话返回true,否则返回false
+     */
+    public static function user_exist($account){
+        $result = DB::table('user')->where(['account'=>$account])->where(function ($q){
+            $q->where('status',0)->orWhere('status',2);
+        })->first();
+        if($result){
+            return true;
+        }
+        return false;
     }
 
 
