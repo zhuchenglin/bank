@@ -1,11 +1,11 @@
 <template>
     <div>
-        <el-table    v-loading="load_user_list"
+        <el-table    v-loading="load_account_list"
                      element-loading-text="拼命加载中"
                      element-loading-spinner="el-icon-loading"
-                :style=" $parent.isCollapse ? 'width:90%;' : 'width:80%;'"
-                  style="margin:auto;display: inline-block"
-                :data="users">
+                     :style=" $parent.isCollapse ? 'width:90%;' : 'width:80%;'"
+                     style="margin:auto;display: inline-block"
+                     :data="accounts">
             <el-table-column
                     label="姓名"
                     width="80">
@@ -82,14 +82,15 @@
     export default {
         data(){
             return {
-                users:[],
+                accounts:[],
                 no_data:false,
-                user_id:0,
+//                user_id:0,
+                account_id:0,
                 can_operate:true,
-                load_user_list:false,
-                total_num:0,
+                load_account_list:false,
                 page:0,
-                num:20
+                num:20,
+                total_num:0,
             }
         },
         components: {
@@ -97,20 +98,24 @@
         },
         computed: {},
         methods: {
-            get_users(){
-                this.load_user_list = true;
-                this.send_request('post','/admin/user/list',function (response,self) {
-                    self.load_user_list = false;
+            get_accounts(){
+                this.load_account_list = true;
+                let data = {
+                    page:this.page,
+                    num:this.num,
+                }
+                this.send_request('post','/admin/account/list',function (response,self) {
+                    self.load_account_list = false;
                     if(response.data.code==0){
-                        self.users = response.data.result.result;
-                        self.total_num = response.data.result.result_num
+                        self.accounts = response.data.result.account;
+                        self.total_num = response.data.result.account_num;
                     }else{
                         self.$message({
                             message:response.data.msg,
                             type: 'error'
                         });
                     }
-                })
+                },data)
             },
             handleEdit(id,name,phone,ID_card){
 
@@ -128,12 +133,12 @@
                         user_id:id,
                         status:stat
                     }
-                    this.send_request('post','/admin/user/en_disable',function (response,self) {
+                    this.send_request('post','/',function (response,self) {
                         if(response.data.code==0){
                             self.show_message(response.data.msg,'success');
                             setTimeout(()=>{
-                                    history.go(0);
-                                },1000)
+                                history.go(0);
+                            },1000)
                         }else{
                             self.show_message(response.data.msg,'warning');
                             self.can_operate = true;
@@ -143,7 +148,7 @@
             },
             handleDelete(id){
                 let self = this;
-                this.$confirm('确定要删除该用户吗?', '提示', {
+                this.$confirm('确定要删除该账户吗?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -154,7 +159,7 @@
                             user_id:id,
                             status:1
                         }
-                        self.send_request('post','/admin/user/delete',function (response,self) {
+                        self.send_request('post','/',function (response,self) {
                             if(response.data.code==0){
                                 self.show_message(response.data.msg,'success');
                                 setTimeout(()=>{
@@ -173,7 +178,7 @@
 
         },
         mounted() {
-            this.get_users();
+            this.get_accounts();
         },
     }
 </script>

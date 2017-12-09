@@ -37,10 +37,20 @@ class User
     }
 
     //后台页面显示的用户列表
-    public static function user_list(){
+    //type=0时返回分页内容，=1时返回总数
+    public static function user_list($page,$num,$type=0){
         $user_list = DB::table('user')->where(['is_manager'=>0])->where(function ($q){
             $q->where('status',0)->orWhere('status',2);
-        })->select('id','name','account','ID_card','avatar','phone','create_time','is_manager','update_time','status')->get();
+        })->select('id','name','account','ID_card','avatar','phone','create_time','is_manager','update_time','status');
+        if($type==1){
+            return $user_list->count();
+        }
+        if($page<0||$num<=0){
+            $user_list = $user_list->get();
+        }else{
+            $start = $page*$num;
+            $user_list = $user_list->offset($start)->limit($num)->get();
+        }
         if($user_list){
             return $user_list;
         }

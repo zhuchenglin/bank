@@ -18,6 +18,16 @@ export default new VueRouter({
                     name: 'user/index',
                     path: 'user/index',
                     component: resolve => void(require(['./user/UserIndex.vue'], resolve)),
+                },
+                {
+                    name: 'account/index',
+                    path: 'account/index',
+                    component: resolve => void(require(['./account/AccountIndex.vue'], resolve)),
+                },
+                {
+                    name: 'account/user/index',
+                    path: 'account/user/index/:user_id',
+                    component: resolve => void(require(['./account/AccountIndex.vue'], resolve)),
                 }
             ]
         },

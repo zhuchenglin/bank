@@ -21,10 +21,16 @@
                         <el-menu-item index="1-2">新增用户</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
-                <el-menu-item index="2">
-                    <i class="ion-card menu_icon"></i>
-                    <span slot="title">账户管理</span>
-                </el-menu-item>
+                <el-submenu index="2">
+                    <template slot="title">
+                        <i class="ion-card menu_icon"></i>
+                        <span slot="title">账户管理</span>
+                    </template>
+                    <el-menu-item-group>
+                        <el-menu-item index="2-1">账户列表</el-menu-item>
+                        <el-menu-item index="2-2">新增账户</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
                 <el-menu-item index="3">
                     <i class="ion-android-clipboard menu_icon"></i>
                     <span slot="title">交易记录</span>

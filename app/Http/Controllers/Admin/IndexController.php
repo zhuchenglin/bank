@@ -1,14 +1,24 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Models\User;
 class IndexController
 {
     function get_user_list(Request $request){
-        $result = User::user_list();
-        if($result){
-            return responseToJson(0,'获取成功',$result);
+        $user_id = get_session_user_id();
+        if(!check_identity($user_id,1)){
+            return responseToJson(-1,'没有权限');
+        }
+        $page = $request->page;
+        $num= $request->num;
+        $result = User::user_list($page,$num);
+        $result_num = User::user_list($page,$num,1);
+        if($result&&$result_num>0){
+            $re['result'] = $result;
+            $re['result_num'] = $result_num;
+            return responseToJson(0,'获取成功',$re);
         }
         return responseToJson(1,'获取失败');
     }
@@ -75,7 +85,23 @@ class IndexController
      * @param 账号列表
      */
     function account_list(Request $request){
-
+        $user_id = get_session_user_id();
+        if(!check_identity($user_id,1)){
+            return responseToJson(-1,'没有权限');
+        }
+        $page = $request->page;
+        $num = $request->num;
+        $result = Account::account_list($page,$num);
+        $result_num = Account::account_list(0,-1,0,1);
+        if($result_num>0&&$result){
+            $re['account'] = $result;
+            $re['account_num'] = $result_num;
+            return responseToJson(0,'获取成功',$re);
+        }
+        if($result_num==0){
+            return responseToJson(1,'暂无数据');
+        }
+        return responseToJson(1,'获取失败');
     }
 
 

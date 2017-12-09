@@ -7,5 +7,13 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/create','Admin\IndexController@user_create');
     });
 
+    Route::group(['prefix' => 'account'], function () {
+        Route::post('/list','Admin\IndexController@account_list');
+
+
+
+
+    });
+
 
 });
