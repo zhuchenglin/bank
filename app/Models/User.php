@@ -99,5 +99,17 @@ class User
         return false;
     }
 
+    /**
+     * 根据身份证号查找单个用户
+     */
+    public static function single_user($ID_card){
+        $result = DB::table('user')->where(['ID_card'=>$ID_card])->first();
+        if($result){
+            return $result;
+        }
+        return 0;
+    }
+
+
 
 }

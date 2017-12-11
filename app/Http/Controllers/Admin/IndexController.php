@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Account;
+use function Faker\Provider\pt_BR\check_digit;
 use Illuminate\Http\Request;
 use App\Models\User;
 class IndexController
@@ -77,6 +78,18 @@ class IndexController
         return responseToJson(1,'添加失败');
     }
 
+    /**
+     * 查看用户
+     */
+    function look_user(Request $request){
+        $user_id = get_session_user_id();
+        if(!check_identity($user_id,1)){
+            return responseToJson(-1,'没有权限');
+        }
+
+
+
+    }
 
 
 

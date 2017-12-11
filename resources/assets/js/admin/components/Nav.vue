@@ -100,6 +100,20 @@
                 <el-button type="primary" @click="create_user();">确 定</el-button>
             </div>
         </el-dialog>
+        <el-dialog title="新增账户" :visible.sync="show_create_account_dialog" v-loading="create_user_is_loading"
+                   element-loading-text="拼命加载中"
+                   element-loading-spinner="el-icon-loading"
+                   element-loading-background="rgba(0, 0, 0, 0.8)">
+            <el-form :model="account_info">
+                <el-form-item label="用户身份证号：" :label-width="formLabelWidth">
+                    <el-input v-model="account_info.ID_card" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="show_create_user_dialog = false">取 消</el-button>
+                <el-button type="primary" @click="create_account();">确 定</el-button>
+            </div>
+        </el-dialog>
         <router-view></router-view>
     </div>
 </template>
@@ -125,12 +139,16 @@
             return {
                 isCollapse: true,
                 show_create_user_dialog:false,
+                show_create_account_dialog:false,
                 can_create:true,
                 user_info:{
                     name:'',
                     account:'',
                     ID_card:'',
                     phone:'',
+                },
+                account_info:{
+                    ID_card:''
                 },
                 formLabelWidth: '120px',
                 create_user_is_loading:false,
@@ -140,7 +158,6 @@
         computed: {},
         methods: {
             handleOpen(key, keyPath) {
-                console.log(key)
                 $('.el-table').css('width','80% !important');
             },
             handleClose(key, keyPath) {
@@ -182,7 +199,17 @@
                     },data);
                 }
             },
+            create_account(){
+                if(this.can_create){
+                    let self = this;
+                    let data = {
+                        account_info:this.account_info
+                    }
+                    this.send_request('post','',function (response,self) {
 
+                    },data)
+                }
+            },
             click_menu(index) {
                 console.log(index);
                 switch (index){
@@ -197,6 +224,15 @@
                             this.show_create_user_dialog = true;
                         }
                         break;
+                    case '2-1':
+                        this.$router.push('/nav/account/index');
+                        break;
+                    case  '2-2':
+                        if(this.can_create){
+                            this.show_create_account_dialog = true;
+                        }
+                        break;
+
                 }
             },
         },
