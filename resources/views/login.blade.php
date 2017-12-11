@@ -87,6 +87,15 @@ a{color:#0078ff;}
 	opacity: 1;
 	color: red;
 }
+
+#tip {
+	height: 20px;
+	line-height: 15px;
+	text-align: center;
+	color: #F76260;
+	font-size: 14px;
+}
+
 </style>
 
 </head>
@@ -98,24 +107,27 @@ a{color:#0078ff;}
 			<input class="login-form-input login-userId"
 			 onBlur="watchInput('login-userId','login-userId-error','prompt-userId','prompt-userId-error','请输入账号')"
 			 onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')"
-			 type="text" value="" placeholder="账号">
+			 type="text" value="" placeholder="账号"
+			 id="name">
 		</div>
 		<span class="login-prompt prompt-userId">请输入账号</span>
 		<div>
 			<input class="login-form-input login-pwd" 
 			 onBlur="watchInput('login-pwd','login-pwd-error','prompt-pwd','prompt-pwd-error','请输入密码')"
 			 onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')"
-			type="password" value="" placeholder="密码">
+			type="password" value="" placeholder="密码"
+			id="pwd">
 		</div>
 		<span class="prompt-pwd login-prompt">请输入密码</span>
-		<div class="login-form-codediv">
+		{{--  <div class="login-form-codediv">
 			<input class="login-form-input login-verification"
 			 onBlur="watchInput('login-verification','login-verification-error','prompt-verification','prompt-verification-error','请输入验证码')"
 			 onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')"
 			 type="text" value="" placeholder="验证码">
 			<img class="login-verification-img" src="/img/Verification.png" alt="登陆验证码">
 		</div>
-		<span class="prompt-verification login-prompt">请输入验证码</span>
+		<span class="prompt-verification login-prompt">请输入验证码</span>  --}}
+		<div id="tip"></div>
 		<div>
 			<input id="login_btn" onclick="submit_form()"
 			 class="login-form-submit" type="button" value="提&nbsp;&nbsp;&nbsp;交">
@@ -148,34 +160,68 @@ $.ajaxSetup({
     headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}
 });
 
-function submit_form() {
-	var userId = document.getElementsByClassName("login-userId")[0].value;
-	var pwd = document.getElementsByClassName("login-pwd")[0].value;
-	var verification = document.getElementsByClassName("login-verification")[0].value;
-	
-	if(userId == ""){
-		addErrorClass(".login-userId","login-userId-error",".prompt-userId","prompt-userId-error","账号不能为空");
-	}
-	if(pwd == ""){	
-		addErrorClass(".login-pwd","login-pwd-error",".prompt-pwd","prompt-pwd-error","密码不能为空");
-	}
-	if(verification == ""){
-		addErrorClass(".login-verification","login-verification-error",".prompt-verification","prompt-verification-error","验证码不能为空");
-	}
 
-	// console.log("1-"+userId+" 2-"+pwd+" 3-"+verification);
-	// ajax  
-	$.post("/check/login",
-    {
-        user_name: userId,
-		user_pwd: pwd,
-		verification: verification
-    },
-    function(res){
-			console.log(res)
-    });
+$('input').on('input', function () {
+        $(this).val($(this).val().replace(/(^\s+)|(\s+$)/g, ""));
+})
+
+
+function submit_form() {
+	if (check()) {
+		var data = {name: $('#name').val(), pwd: $('#pwd').val()};
+		$.ajax({
+			type: 'post',
+			data: data,
+			success: function (data) {
+				if (data.status == 0) {
+					location.replace('/' + location.hash);
+				} else {
+					flashTip(data.msg);
+				}
+			},
+			error: function () {
+				flashTip('网络错误，请稍后再试!');
+			}
+		})
+	}
 
 }
+
+	function check() {
+		var nameObj = $('#name');
+		if (nameObj.val().length == 0) {
+			nameObj.focus();
+			flashBorder(nameObj.parent('.login-input'));
+			return false;
+		}
+		var pwdObj = $('#pwd');
+		if (pwdObj.val().length == 0) {
+			pwdObj.focus();
+			flashBorder(pwdObj.parent('.login-input'));
+			return false;
+		}
+
+		return true;
+	}
+	
+	function flashBorder(obj) {
+        obj.css('border', '1px solid #ff7575');
+        setTimeout(function () {
+            obj.css('border', '1px solid #cdcdcd')
+        }, 1000);
+    }
+	function keyLogin(event) {
+        if (event.keyCode == 13) {
+            submit_form();
+        }
+    }
+	//消息提示
+	function flashTip(msg) {
+        $('#tip').html(msg);
+        setTimeout(function () {
+            $('#tip').html('');
+        }, 3500);
+    }
 
 </script>
 
