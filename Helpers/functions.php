@@ -47,9 +47,9 @@ function get_session_user_id()
  * @param $salt
  * @return string
  */
-function encrypt_password($password, $salt)
+function encrypt_password($password)
 {
-    return md5(md5($password) . $salt);
+    return md5(md5($password));
 }
 
 function get_salt()

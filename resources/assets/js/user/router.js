@@ -8,12 +8,12 @@ export default new VueRouter({
         //首页
         {
             path: '/',
-            component: resolve =>void(require(['./User.vue'], resolve))
-        },
-        {
-            name:'user/index',
-            path: '/user/index',
             component: resolve =>void(require(['./components/Index.vue'], resolve))
         },
+        // {
+        //     name:'user/index',
+        //     path: '/user/index',
+        //     component: resolve =>void(require(['./components/Index.vue'], resolve))
+        // },
     ]
 })

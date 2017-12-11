@@ -10,7 +10,13 @@
     <link href="https://cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
     <link href="{{mix('css/app.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="/library/css/main.css"/>
     <title>{{config("app.name")}}</title>
+    <script>
+        window.GammaApp = {
+            appName: "{{ config('app.name') }}"
+        };
+    </script>
 </head>
 <body>
 <div id="app"></div>

@@ -10,6 +10,7 @@
     <link href="https://cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
     <link href="{{mix('css/app.css')}}" rel="stylesheet">
+    
     <title>{{config("app.name")}}</title>
 </head>
 <body>

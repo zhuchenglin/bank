@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 class IndexController
 {
+
     function get_user_list(Request $request){
         $user_id = get_session_user_id();
         if(!check_identity($user_id,1)){
@@ -116,6 +117,7 @@ class IndexController
         }
         return responseToJson(1,'获取失败');
     }
+
 
 
 

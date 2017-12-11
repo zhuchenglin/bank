@@ -110,6 +110,20 @@ class User
         return 0;
     }
 
-
+     /**
+     * 获取用户信息
+     * @param  [String] $code or $phone
+     * @return  Object
+     */
+     public static function get_user_by_code($codeOrMobile)
+     {
+         try {
+             $user = DB::table("user")->where("name", $codeOrMobile)->first();
+             return $user;
+         } catch (\Exception $e) {
+             Log::info($e);
+             return null;
+         }
+     }
 
 }
