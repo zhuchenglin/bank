@@ -15,7 +15,7 @@
                          <CodeNum @change="onCodeNumChange"></CodeNum>
                     </el-form-item>
                     <el-form-item label="请输入对方卡号">
-                          <el-input v-model="money" placeholder="请输入对方卡号" style="width:200px" type="number"></el-input>
+                          <el-input v-model="otherCode" placeholder="请输入对方卡号" style="width:200px" ></el-input>
                     </el-form-item>
                     <el-form-item label="请输入转款金额">
                           <el-input v-model="money" placeholder="请输入转款金额" style="width:200px" type="number"></el-input>
@@ -43,8 +43,9 @@ import CodeNum from '../widget/CodeNum.vue'
             return {
                 codeId:0,
                 password:null,
-                money:0,
-                isSubmiting:false
+                money:null,
+                isSubmiting:false,
+                otherCode:null
             }
         },
         methods: {

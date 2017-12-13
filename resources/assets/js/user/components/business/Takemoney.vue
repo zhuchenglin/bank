@@ -40,7 +40,7 @@ import CodeNum from '../widget/CodeNum.vue'
             return {
                 codeId:0,
                 password:null,
-                money:0,
+                money:null,
                 isSubmiting:false
             }
         },
