@@ -6,4 +6,6 @@
 
 
     Route::post('deposit','User\BusinessController@deposit');
+    Route::post('takemoney','User\BusinessController@take_money');
+    Route::post('transfer','User\BusinessController@transfer');
 });

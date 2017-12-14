@@ -54,7 +54,47 @@ import CodeNum from '../widget/CodeNum.vue'
                 this.$router.go(-1);
             },
             onSubmitClick : function(){
+                if(this.codeId == 0){
+                    this.$message('请选择银行卡')
+                    return
+                }
+
+                if(this.money == null || this.money==0){
+                    this.$message('请输入取款金额')
+                    return
+                }
+
+                if(this.password == null){
+                    this.$message('请输入密码')
+                    return
+                }
+                
                 this.isSubmiting = true
+                var param = {
+                    'account_id':this.codeId,
+                    'money':this.money,
+                    'password':this.password
+
+                }
+                axios.post('/user/takemoney',param).then(res =>{
+                    // console.log(res.data)
+                    if(res.data.code==0){
+                        this.$message({
+                            message:res.data.msg,
+                            type : 'success'    
+                        })
+                    }else{
+                        this.$message({ 
+                            message:res.data.msg,
+                            type:'error'
+                        })
+                        
+                    }
+                    this.isSubmiting = false
+                }).catch(err => {
+
+                })
+
             }
         },
         mounted() {
