@@ -110,7 +110,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="show_create_user_dialog = false">取 消</el-button>
+                <el-button @click="show_create_account_dialog = false">取 消</el-button>
                 <el-button type="primary" @click="create_account();">确 定</el-button>
             </div>
         </el-dialog>
@@ -205,8 +205,13 @@
                     let data = {
                         account_info:this.account_info
                     }
-                    this.send_request('post','',function (response,self) {
-
+                    this.send_request('post','/admin/account/create',function (response,self) {
+                        if(response.data.code==0){
+                            self.$router.push('/nav/account/index');
+                            location.reload();
+                        }else{
+                            self.show_message(response.data.msg,'warning');
+                        }
                     },data)
                 }
             },
