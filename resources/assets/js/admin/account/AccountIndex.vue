@@ -29,14 +29,14 @@
             </el-table-column>
             <el-table-column
                     label="所属人姓名"
-                    width="150">
+                    width="120">
                 <template slot-scope="scope">
                     <span style="margin-left: 10px">{{ scope.row.name }}</span>
                 </template>
             </el-table-column>
             <el-table-column
                     label="身份证号"
-                    width="250">
+                    width="220">
                 <template slot-scope="scope">
                     <span style="margin-left: 10px">{{ scope.row.ID_card }}</span>
                 </template>
@@ -53,6 +53,12 @@
                 <template slot-scope="scope">
                     <el-button
                             size="mini"
+                            @click="$router.push('/nav/account/access/record/'+scope.row.id)">存取记录</el-button>
+                    <el-button
+                            size="mini"
+                            @click="$router.push('/nav/account/transfer/record/'+scope.row.id)">转账记录</el-button>
+                    <el-button
+                            size="mini"
                             @click="en_disable(scope.row.id,scope.row.status)">{{scope.row.status==0 ? '冻结' : '解冻'}}</el-button>
                     <el-button
                             size="mini"
@@ -65,7 +71,8 @@
             <el-pagination
                     layout="prev, pager, next"
                     :page-size="num"
-                    :total="total_num">
+                    :total="total_num"
+                    @current-change="page_change()">
             </el-pagination>
         </div>
     </div>
@@ -82,7 +89,7 @@
             return {
                 accounts:[],
                 no_data:false,
-//                user_id:0,
+                user_id:0,
                 account_id:0,
                 can_operate:true,
                 load_account_list:false,
@@ -98,9 +105,18 @@
         methods: {
             get_accounts(){
                 this.load_account_list = true;
-                let data = {
-                    page:this.page,
-                    num:this.num,
+                let data;
+                if(this.user_id==0){
+                    data = {
+                        page:this.page,
+                        num:this.num,
+                    }
+                }else{
+                    data = {
+                        page:this.page,
+                        num:this.num,
+                        user_id:this.user_id
+                    }
                 }
                 this.send_request('post','/admin/account/list',function (response,self) {
                     self.load_account_list = false;
@@ -172,11 +188,20 @@
                 }).catch(() => {
 
                 });
+            },
+            page_change(page){
+                this.page = page;
+                this.get_accounts();
             }
 
         },
         mounted() {
             this.get_accounts();
+            if(this.$route.name=='account/user/index'){
+                this.user_id = this.$route.params.user_id;
+            }else{
+                this.user_id = 0;
+            }
         },
     }
 </script>

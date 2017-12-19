@@ -25,6 +25,9 @@ class LoginController extends Controller
                 //md5(md5($pwd) . $user->salt)
 //                dump($user->password);
             //    dd(encrypt_password($pwd));
+            if(!$user){
+                return Response::json(['status' => 1, 'msg' => '该用户不存在！']);
+            }
                 if (encrypt_password($pwd) == $user->password) {
                     // $roleIds = explode(',', $user->role_id);
                     // $permission = Role::get_role_permission($roleIds);

@@ -1,5 +1,8 @@
 <?php
 Route::group(['prefix' => 'admin'], function () {
+    Route::post('/login_out','Admin\IndexController@login_out');
+
+
     Route::group(['prefix' => 'user'], function () {
         Route::post('/list','Admin\IndexController@get_user_list');
         Route::post('/en_disable','Admin\IndexController@en_disable');
@@ -16,5 +19,10 @@ Route::group(['prefix' => 'admin'], function () {
 
     });
 
+    Route::group(['prefix' => 'account_record'], function () {
+        Route::post('/list','Admin\IndexController@account_record_list');
+
+
+    });
 
 });

@@ -12,7 +12,6 @@ class LoginController
 
         $user_name =  $request->user_name;
         $user_pwd = $request->user_pwd;
-       
 
         return responseToJson(1,'登陆成功');
 

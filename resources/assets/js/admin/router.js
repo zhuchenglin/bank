@@ -28,7 +28,27 @@ export default new VueRouter({
                     name: 'account/user/index',
                     path: 'account/user/index/:user_id',
                     component: resolve => void(require(['./account/AccountIndex.vue'], resolve)),
-                }
+                },
+                {
+                    name: 'all/access/record',
+                    path: 'all/access/record',
+                    component: resolve => void(require(['./account_record/AccountRecordIndex.vue'], resolve)),
+                },
+                {
+                    name: 'account/access/record',
+                    path: 'account/access/record/:account_id',
+                    component: resolve => void(require(['./account_record/AccountRecordIndex.vue'], resolve)),
+                },
+                {
+                    name: 'all/transfer/record',
+                    path: 'all/transfer/record',
+                    component: resolve => void(require(['./account_record/AccountRecordIndex.vue'], resolve)),
+                },
+                {
+                    name: 'account/transfer/record',
+                    path: 'account/transfer/record/:account_id',
+                    component: resolve => void(require(['./account_record/AccountRecordIndex.vue'], resolve)),
+                },
             ]
         },
 

@@ -31,10 +31,20 @@
                         <el-menu-item index="2-2">新增账户</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
-                <el-menu-item index="3">
-                    <i class="ion-android-clipboard menu_icon"></i>
-                    <span slot="title">交易记录</span>
-                </el-menu-item>
+                <!--<el-menu-item index="3">-->
+                    <!--<i class="ion-android-clipboard menu_icon"></i>-->
+                    <!--<span slot="title">交易记录</span>-->
+                <!--</el-menu-item>-->
+                <el-submenu index="3">
+                    <template slot="title">
+                        <i class="ion-android-clipboard menu_icon"></i>
+                        <span slot="title">交易记录</span>
+                    </template>
+                    <el-menu-item-group>
+                        <el-menu-item index="3-1">全部转账记录</el-menu-item>
+                        <el-menu-item index="3-2">全部存取款记录</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
                 <!--<el-submenu index="1">-->
                     <!--<template slot="title">-->
                         <!--<i class="ion-person menu_icon"></i>-->
@@ -71,7 +81,7 @@
                         <span slot="title">我的</span>
                     </template>
                     <el-menu-item-group>
-                        <el-menu-item index="4-1">个人中心</el-menu-item>
+                        <!--<el-menu-item index="4-1">个人中心</el-menu-item>-->
                         <el-menu-item index="4-2">注销登录</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
@@ -215,8 +225,17 @@
                     },data)
                 }
             },
+            login_out(){
+              this.send_request('post','/admin/login_out',function(response,self) {;
+                    if(response.data.code==0){
+//                        history.go(0);
+                        location.href="/";
+                    }else{
+                       self.show_message(response.data.msg,'warning');
+                    }
+              });
+            },
             click_menu(index) {
-                console.log(index);
                 switch (index){
                     case '0':
                         this.isCollapse = !this.isCollapse;
@@ -237,7 +256,15 @@
                             this.show_create_account_dialog = true;
                         }
                         break;
-
+                    case  '3-1':
+                        this.$router.push('/nav/all/transfer/record');
+                        break;
+                    case  '3-2':
+                        this.$router.push('/nav/all/access/record');
+                        break;
+                    case '4-2':
+                        this.login_out();
+                        break;
                 }
             },
         },
