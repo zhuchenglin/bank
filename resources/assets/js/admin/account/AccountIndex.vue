@@ -7,22 +7,36 @@
                      style="margin:auto;display: inline-block"
                      :data="accounts">
             <el-table-column
-                    label="姓名"
-                    width="80">
-                <template slot-scope="scope">
-                    <span style="margin-left: 10px">{{ scope.row.name }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column
                     label="账号"
-                    width="150">
+                    width="180">
                 <template slot-scope="scope">
                     <span style="margin-left: 10px">{{ scope.row.account }}</span>
                 </template>
             </el-table-column>
             <el-table-column
+                    label="余额"
+                    width="100">
+                <template slot-scope="scope">
+                    <span style="margin-left: 10px">{{ scope.row.rest_money }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="创建时间"
+                    width="180">
+                <template slot-scope="scope">
+                    <span style="margin-left: 10px">{{ scope.row.create_time | date('yyyy-MM-dd hh:mm') }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="所属人姓名"
+                    width="120">
+                <template slot-scope="scope">
+                    <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
                     label="身份证号"
-                    width="250">
+                    width="220">
                 <template slot-scope="scope">
                     <span style="margin-left: 10px">{{ scope.row.ID_card }}</span>
                 </template>
@@ -34,28 +48,18 @@
                     <span style="margin-left: 10px">{{ scope.row.phone }}</span>
                 </template>
             </el-table-column>
-            <el-table-column
-                    label="创建时间"
-                    width="80">
-                <template slot-scope="scope">
-                    <span style="margin-left: 10px">{{ scope.row.create_time }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    label="更新时间"
-                    width="80">
-                <template slot-scope="scope">
-                    <span style="margin-left: 10px">{{ scope.row.update_time }}</span>
-                </template>
-            </el-table-column>
+
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button
                             size="mini"
-                            @click="">账户详情</el-button>
+                            @click="$router.push('/nav/account/access/record/'+scope.row.id)">存取记录</el-button>
                     <el-button
                             size="mini"
-                            @click="en_disable(scope.row.id,scope.row.status)">{{scope.row.status==0 ? '禁用' : '启用'}}</el-button>
+                            @click="$router.push('/nav/account/transfer/record/'+scope.row.id)">转账记录</el-button>
+                    <el-button
+                            size="mini"
+                            @click="en_disable(scope.row.id,scope.row.status)">{{scope.row.status==0 ? '冻结' : '解冻'}}</el-button>
                     <el-button
                             size="mini"
                             type="danger"
@@ -67,7 +71,8 @@
             <el-pagination
                     layout="prev, pager, next"
                     :page-size="num"
-                    :total="total_num">
+                    :total="total_num"
+                    @current-change="page_change()">
             </el-pagination>
         </div>
     </div>
@@ -84,7 +89,7 @@
             return {
                 accounts:[],
                 no_data:false,
-//                user_id:0,
+                user_id:0,
                 account_id:0,
                 can_operate:true,
                 load_account_list:false,
@@ -100,9 +105,18 @@
         methods: {
             get_accounts(){
                 this.load_account_list = true;
-                let data = {
-                    page:this.page,
-                    num:this.num,
+                let data;
+                if(this.user_id==0){
+                    data = {
+                        page:this.page,
+                        num:this.num,
+                    }
+                }else{
+                    data = {
+                        page:this.page,
+                        num:this.num,
+                        user_id:this.user_id
+                    }
                 }
                 this.send_request('post','/admin/account/list',function (response,self) {
                     self.load_account_list = false;
@@ -125,15 +139,15 @@
                     this.can_operate=false;
                     let stat;
                     if(status==0){
-                        stat = 2;
+                        stat = 1;
                     }else{
                         stat = 0;
                     }
                     let data = {
-                        user_id:id,
+                        account_id:id,
                         status:stat
                     }
-                    this.send_request('post','/',function (response,self) {
+                    this.send_request('post','/admin/account/en_disable',function (response,self) {
                         if(response.data.code==0){
                             self.show_message(response.data.msg,'success');
                             setTimeout(()=>{
@@ -156,10 +170,10 @@
                     if(self.can_operate){
                         self.can_operate = false;
                         let data = {
-                            user_id:id,
-                            status:1
+                            account_id:id,
+                            status:2
                         }
-                        self.send_request('post','/',function (response,self) {
+                        self.send_request('post','/admin/account/delete',function (response,self) {
                             if(response.data.code==0){
                                 self.show_message(response.data.msg,'success');
                                 setTimeout(()=>{
@@ -174,11 +188,20 @@
                 }).catch(() => {
 
                 });
+            },
+            page_change(page){
+                this.page = page;
+                this.get_accounts();
             }
 
         },
         mounted() {
             this.get_accounts();
+            if(this.$route.name=='account/user/index'){
+                this.user_id = this.$route.params.user_id;
+            }else{
+                this.user_id = 0;
+            }
         },
     }
 </script>

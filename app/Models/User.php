@@ -78,7 +78,7 @@ class User
             'account'=>$account,
             'ID_card'=>$ID_card,
             'phone'=>$phone,
-            'password'=>md5($password)
+            'password'=>encrypt_password($password)
         ]);
         if($result){
             return true;
@@ -118,7 +118,9 @@ class User
      public static function get_user_by_code($codeOrMobile)
      {
          try {
-             $user = DB::table("user")->where("name", $codeOrMobile)->first();
+             $user = DB::table("user")->where(function ($q) use ($codeOrMobile){
+                 $q->where('name',$codeOrMobile)->orWhere('account',$codeOrMobile)->orWhere('phone',$codeOrMobile);
+             })->first();
              return $user;
          } catch (\Exception $e) {
              Log::info($e);

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Account;
+use App\Models\Business;
+use DeepCopy\f001\B;
 use function Faker\Provider\pt_BR\check_digit;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -82,15 +84,15 @@ class IndexController
     /**
      * 查看用户
      */
-    function look_user(Request $request){
-        $user_id = get_session_user_id();
-        if(!check_identity($user_id,1)){
-            return responseToJson(-1,'没有权限');
-        }
-
-
-
-    }
+//    function look_user(Request $request){
+//        $user_id = get_session_user_id();
+//        if(!check_identity($user_id,1)){
+//            return responseToJson(-1,'没有权限');
+//        }
+//
+//
+//
+//    }
 
 
 
@@ -103,10 +105,11 @@ class IndexController
         if(!check_identity($user_id,1)){
             return responseToJson(-1,'没有权限');
         }
+        $user_id = $request->user_id;
         $page = $request->page;
         $num = $request->num;
         $result = Account::account_list($page,$num);
-        $result_num = Account::account_list(0,-1,0,1);
+        $result_num = Account::account_list(0,-1,$user_id,1);
         if($result_num>0&&$result){
             $re['account'] = $result;
             $re['account_num'] = $result_num;
@@ -118,11 +121,100 @@ class IndexController
         return responseToJson(1,'获取失败');
     }
 
+    function account_create(Request $request){
+        $user_id = get_session_user_id();
+        $account_info = $request->account_info;
+        $ID_card = $account_info['ID_card'];
+        if(!check_identity($user_id,1)){
+            return responseToJson(-1,'没有权限');
+        }
+        if(empty($ID_card)){
+            return responseToJson(1,'身份证号不能为空');
+        }
+        $single_user = User::single_user($ID_card);
+        if($single_user){
+            $result = Account::account_create($single_user->id);
+            if($result){
+                return responseToJson(0,'添加成功');
+            }
+            return responseToJson(1,'添加失败');
+        }else{
+            return responseToJson(1,'该用户不存在');
+        }
+    }
+
+    function account_en_dis(Request $request){
+        $user_id = get_session_user_id();
+        if(!check_identity($user_id,1)){
+            return responseToJson(-1,'没有权限');
+        }
+        $account_id = $request->account_id;
+        $status = $request->status;
+        if(empty($account_id) || !Account::account_exist($account_id)){
+            return responseToJson(1,'账号不存在');
+        }
+        $msg = '';
+        if($status==1){
+            $msg = '冻结账户';
+        }else if($status==0){
+            $msg = '恢复账户';
+        }
+        $result = Account::en_disable_del($account_id,$status);
+        if($result){
+            return responseToJson(0,$msg.'成功');
+        }else{
+            return responseToJson(0,$msg.'失败');
+        }
+
+    }
+
+    function delete_account(Request $request){
+        $user_id = get_session_user_id();
+        if(!check_identity($user_id,1)){
+            return responseToJson(-1,'没有权限');
+        }
+        $account_id = $request->account_id;
+        $status = $request->status;
+        if(empty($account_id) || !Account::account_exist($account_id)){
+            return responseToJson(1,'账号不存在');
+        }
+        $result = Account::en_disable_del($account_id,$status);
+        if($result){
+            return responseToJson(0,'删除成功');
+        }else{
+            return responseToJson(0,'删除失败');
+        }
+    }
 
 
+    function account_record_list(Request $request){
+        $user_id = get_session_user_id();
+        if(!check_identity($user_id,1)){
+            return responseToJson(-1,'没有权限');
+        }
+        $account_id = $request->account_id;
+        if(empty($account_id)){
+            $account_id = 0;
+        }
+        $type = $request->type;
+        if(empty($type)){
+            $type=1;
+        }
+        $page = $request->page;
+        $num = $request->num;
+        $re['count'] = Business::account_record_list($account_id,$type,$page,$num,1);
+        $re['num'] = Business::account_record_list($account_id,$type,$page,$num,0);
+        if($re['count']&&$re['num']){
+            return responseToJson(0,'获取成功',$re);
+        }else{
+            return responseToJson(1,'获取失败');
+        }
+    }
 
-
-
+    function login_out(Request $request){
+        $request->session()->flush();
+        return responseToJson(0,'注销成功');
+    }
 
 
 }

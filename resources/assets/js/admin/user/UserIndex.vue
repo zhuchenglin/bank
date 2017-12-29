@@ -52,7 +52,7 @@
                 <template slot-scope="scope">
                     <el-button
                             size="mini"
-                            @click="">账户详情</el-button>
+                            @click="$router.push('/nav/account/user/index/'+scope.row.id)">账户详情</el-button>
                     <el-button
                             size="mini"
                             @click="en_disable(scope.row.id,scope.row.status)">{{scope.row.status==0 ? '禁用' : '启用'}}</el-button>
@@ -67,7 +67,8 @@
             <el-pagination
                     layout="prev, pager, next"
                     :page-size="num"
-                    :total="total_num">
+                    :total="total_num"
+                    @current-change="change_page()">
             </el-pagination>
         </div>
     </div>
@@ -169,6 +170,10 @@
                 }).catch(() => {
 
                 });
+            },
+            change_page(page){
+                this.page = page;
+                this.get_users();
             }
 
         },
