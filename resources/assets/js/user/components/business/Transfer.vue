@@ -5,7 +5,7 @@
             <!-- <el-button type="text" class="gm-back" @click="$router.go(-1)"><i class="el-icon-arrow-left"></i></el-button> -->
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item to="/business/deopsit">综合业务</el-breadcrumb-item>
-                <el-breadcrumb-item to="/business/deopsit">存钱</el-breadcrumb-item>
+                <el-breadcrumb-item to="/business/deopsit">转账</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <el-row>
