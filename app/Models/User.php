@@ -117,15 +117,31 @@ class User
      */
      public static function get_user_by_code($codeOrMobile)
      {
-         try {
-             $user = DB::table("user")->where(function ($q) use ($codeOrMobile){
-                 $q->where('name',$codeOrMobile)->orWhere('account',$codeOrMobile)->orWhere('phone',$codeOrMobile);
-             })->first();
-             return $user;
-         } catch (\Exception $e) {
-             Log::info($e);
-             return null;
-         }
-     }
+        try {
+            $user = DB::table("user")->where(function ($q) use ($codeOrMobile){
+                $q->where('name',$codeOrMobile)->orWhere('account',$codeOrMobile)->orWhere('phone',$codeOrMobile);
+            })->first();
+            return $user;
+        } catch (\Exception $e) {
+            Log::info($e);
+            return null;
+        }
+    }
+
+    static function is_password_right($pwd)
+    {
+        $user = DB::table('user')->where('id', get_session_user_id())->first();
+        return $user->password == encrypt_password($pwd);
+    }
+
+    static function change_password($new_pwd)
+    {
+        // $salt = get_salt();
+        $password = encrypt_password($new_pwd);
+        $res = DB::table('user')
+            ->where('id', get_session_user_id())
+            ->update(['password' => $password, 'update_time' => time()]);
+        return $res;
+    }
 
 }

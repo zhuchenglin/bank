@@ -15,7 +15,7 @@ class BusinessController extends Controller
         $account_id = intval($request->account_id);
         if(Business::check_psd($request->account_id,$password)){
             $user_id = get_session_user_id();
-            $money = $request->money;
+            $money = $request->money * 100;
             if(Business::deposit($user_id,$money,$account_id)){
                 return responseToJson(0,'存款成功');
             }else{
@@ -35,7 +35,7 @@ class BusinessController extends Controller
         $account_id = intval($request->account_id);
         if(Business::check_psd($request->account_id,$password)){
             $user_id = get_session_user_id();
-            $money = $request->money;
+            $money = $request->money * 100;
             $res = Business::check_money($money,$account_id);
             // dd($res[0]);
             if( ($res[0]-$money) < 0){
@@ -58,7 +58,7 @@ class BusinessController extends Controller
         $account_id = intval($request->account_id);
         if(Business::check_psd($request->account_id,$password)){
             $user_id = get_session_user_id();
-            $money = $request->money;
+            $money = $request->money * 100;
             $receive_account_id = $request->receive_account_id;
             $res = Business::check_other_code($receive_account_id);
             // dd($res);

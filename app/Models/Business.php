@@ -65,7 +65,8 @@ class Business extends Model
             'status' => 0,
             'create_time' => time(),
             'user_id' => $user_id,
-            'account_id' => $account_id
+            'account_id' => $account_id,
+            'receive_account_id' => $account_other_id
         ]);
         // dd($account_id);
         if ($res) {
