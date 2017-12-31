@@ -101,11 +101,24 @@
         components: {
 
         },
-        computed: {},
+        watch: {
+            $route(to, from) {
+                if(this.$route.name=='account/user/index'){
+                    this.user_id = this.$route.params.user_id;
+                }else{
+                    this.user_id = 0;
+                }
+                this.get_accounts();
+            }
+        },
+        computed: {
+
+        },
         methods: {
             get_accounts(){
                 this.load_account_list = true;
                 let data;
+                console.log(this.user_id);
                 if(this.user_id==0){
                     data = {
                         page:this.page,
@@ -196,12 +209,12 @@
 
         },
         mounted() {
-            this.get_accounts();
             if(this.$route.name=='account/user/index'){
                 this.user_id = this.$route.params.user_id;
             }else{
                 this.user_id = 0;
             }
+            this.get_accounts();
         },
     }
 </script>
